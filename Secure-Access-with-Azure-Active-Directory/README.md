@@ -13,7 +13,7 @@ This project demonstrates core skills in **Azure Active Directory (Microsoft Ent
 - Enable and test **self-service password reset (SSPR)**  
 - Enable and verify **multifactor authentication (MFA)**  
 
-...
+
 
 ## 📚 Learning Outcomes
 - Practical experience in **Azure AD user & group management**  
