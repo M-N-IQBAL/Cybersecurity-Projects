@@ -148,11 +148,11 @@ Sysmon (System Monitor) is a Windows system service and device driver from the S
 ### **3\. Install Sysmon with Configuration**
 
 1. Open **PowerShell as Administrator**.  
-2. Navigate to the Sysmon directory:  **cd "C:\\path\\to\\Sysmon"**  
-3. Run the installation command:  .\\Sysmon64.exe \-i sysmonconfig.xml ![](images/image_4.png)`
+2. Navigate to the Sysmon directory:  `cd "C:\path\to\Sysmon"`
+3. Run the installation command:   `.\Sysmon64.exe -i sysmonconfig.xml` ![](images/image_4.png)
 4. Accept the license agreement.  
 5. After installation, you should see the message:   **`Sysmon64 started.`**  
-6. Run the following command to confirm Sysmon is running:	Get-Service \-Name sysmon64  
+6. Run the following command to confirm Sysmon is running:	Get-Service -Name sysmon64  
 7. If the **Status** shows **`Running`**, Sysmon has been successfully installed.   
 8. To verify logs are being generated, open Event Viewer → **Applications and Services Logs → Microsoft → Windows → Sysmon → Operational.**
 
@@ -192,7 +192,7 @@ In this step, you’ll deploy cloud-based Ubuntu servers for Wazuh and TheHive u
    5. **Hostname**: **`Wazuh`** (you can choose any name, but functional names keep things organized)  
    6. Select the project you created earlier.  
    7. Click **Create Droplet**.![](images/image_10.png)  
-   8. To connect to your Droplet later, use: ssh root@\<droplet-ip\>
+   8. To connect to your Droplet later, use: `ssh root@<droplet-ip>`
 
 ### **3\. Create TheHive Droplet**
 
@@ -215,15 +215,15 @@ Repeat the same steps as above, but this time:
 * **`Wazuh` →** for SIEM setup  
 * **`TheHive`** → for incident response and case management
 
-| Droplet | Purpose | Recommended Specs | Hostname |
-| :---: | :---: | :---: | :---: |
-| Wazuh | SIEM & log analysis | 8 GB RAM / 4 vCPUs | Wazuh |
-| The-Hive | Incident response | 16 GB RAM / 4 vCPUs | The-Hive |
+  Droplet   Purpose   Recommended Specs   Hostname  
+  :---:   :---:   :---:   :---:  
+  Wazuh   SIEM & log analysis   8 GB RAM / 4 vCPUs   Wazuh  
+  The-Hive   Incident response   16 GB RAM / 4 vCPUs   The-Hive  
 
 ## **Connect to the Wazuh VM**
 
 1. Open **PowerShell** on your local machine.  
-2. Run the following command (replace with your Wazuh VM IP): ssh root@{your-wazuh-vm-ip}  
+2. Run the following command (replace with your Wazuh VM IP): `ssh root@{your-wazuh-vm-ip}`  
 3. Type **`yes`** and press **Enter**.  
 4. Enter the VM password you created during set![](images/image_12.png)
 
@@ -231,8 +231,8 @@ You are now inside your Wazuh VM.
 
 Run the following to update your packages: 
 
-| apt-get update && apt-get upgrade \-y |
-| :---- |
+` apt-get update && apt-get upgrade -y `
+
 
 ## **Install Wazuh**
 
@@ -254,15 +254,15 @@ Check the status of the Wazuh manager service: systemctl status wazuh-manager.se
 * If it’s **running** → you’re good to go.  
 * If not, restart the service and check again:
 
-| systemctl restart wazuh-manager.servicesystemctl status wazuh-manager.service |
-| :---- |
+`systemctl restart wazuh-manager.service
+systemctl status wazuh-manager.service `
 
 ![](images/image_14.png)
 
 ### **Access the Wazuh Web Interface**
 
 1. Open your browser and go to: **https://{your-wazuh-vm-ip}**  
-2. If you cannot access it, allow HTTPS traffic (port 443): sudo ufw allow 443  
+2. If you cannot access it, allow HTTPS traffic (port 443): `sudo ufw allow 443  `
 3. Try again — you should now see the Wazuh dashboard.  
 4. Log in using the **username and password** you saved earlier.
 
@@ -282,7 +282,7 @@ Go to the official StrangeBee portal and register for an account: 👉 [Register
 
 * Open PowerShell on your local machine and connect via SSH (replace with your TheHive VM IP): ssh root@{your-thehive-vm-ip}  
 * Type **`yes`** when prompted, then enter your VM password.  
-* Update your system packages: sudo apt update && apt upgrade \-y
+* Update your system packages: `sudo apt update && apt upgrade -y`
 
 ## **Install Dependencies**
 
@@ -297,11 +297,11 @@ Copy and run the commands exactly as shown in the documentation.![](images/image
 
 ![](images/image_19.png)
 
-After installing Java, verify the version:  java \-version
+After installing Java, verify the version:  `java -version`
 
 If no version is displayed, rerun the Java installation command (the one starting with **`wget ...`**),
 
-then confirm installation again with:  java \-version
+then confirm installation again with:  `java -version`
 
 ## **Install Cassandra**
 
@@ -324,45 +324,62 @@ Use **`wget`** (recommended) to download and install TheHive.
 
 ## **Configure Cassandra**
 
-Open the Cassandra configuration file:  nano /etc/cassandra/cassandra.yaml
+Open the Cassandra configuration file:  `nano /etc/cassandra/cassandra.yaml`
 
 If cassandra.yaml is missing, Cassandra likely didn’t install correctly. Reinstall it before proceeding.
 
 **Edit the following keys** (use **`CTRL+W`** in nano to search each key):
 
-| cluster\_name: 'soc-workflow'listen\_address: {thehive-vm-ip}rpc\_address: {thehive-vm-ip}\- seeds: "{thehive-vm-ip}:7000" |
-| :---- |
-
+``` 
+cluster_name: 'soc-workflow' 
+listen_address: {thehive-vm-ip}
+rpc_address: {thehive-vm-ip}
+   - seeds: "{thehive-vm-ip}:7000" 
+```
 Save and exit: **CTRL+X → Y → Enter**
 
 **Restart Cassandra cleanly:**
 
-| sudo systemctl stop cassandra.servicesudo rm \-rf /var/lib/cassandra/\*sudo systemctl start cassandra.servicesudo systemctl status cassandra.service |
-| :---- |
+`sudo systemctl stop cassandra.service`
+
+`sudo rm -rf /var/lib/cassandra/*`
+
+`sudo systemctl start cassandra.service`
+
+`sudo systemctl status cassandra.service`
+
 
 ✅ If the status shows **active (running)**, Cassandra is ready.![](images/image_28.png)
 
 ## **Configure Elasticsearch**
 
-Open the configuration file: nano /etc/elasticsearch/elasticsearch.yml
+Open the configuration file: `nano /etc/elasticsearch/elasticsearch.yml`
 
 ⚠️If elasticsearch.yml is missing, Elasticsearch likely didn’t install correctly. Reinstall it using the previous steps.
 
-Then open the configuration file again: nano /etc/elasticsearch/elasticsearch.yml
+Then open the configuration file again: `nano /etc/elasticsearch/elasticsearch.yml`
 
 **Update the following keys** (use **`CTRL+W`** in nano to search each key): 
 
-| cluster.name: soc-workflow node.name: node-1 network.host: {hive-vm-ip} http.port: 9200 cluster.initial\_master\_nodes: \["node-1"\] |
-| :---- |
-
+```
+ cluster.name: soc-workflow
+ 
+node.name: node-1
+network.host: {hive-vm-ip}
+ http.port: 9200 
+ cluster.initial_master_nodes: ["node-1"] 
+```
 ![](images/image_29.png)
 
 Save and exit: **CTRL+X → Y → Enter**
 
 **Restart and enable Elasticsearch:**
 
-| sudo systemctl start elasticsearch.servicesudo systemctl enable elasticsearch.servicesudo systemctl status elasticsearch.service |
-| :---- |
+`sudo systemctl start elasticsearch.service`
+
+`sudo systemctl enable elasticsearch.service`
+
+`sudo systemctl status elasticsearch.service `
 
 ✅ If the status shows **active (running)**, Elasticsearch is ready.![](images/image_30.png)
 
@@ -370,19 +387,29 @@ Save and exit: **CTRL+X → Y → Enter**
 
 Before configuring TheHive, update file permissions for its directory:
 
-| cd /opt/thpls \-lsudo chown \-R thehive:thehive /opt/thpls \-l |
-| :---- |
-
+```cd /opt/thp
+ls -l
+sudo chown -R thehive:thehive /opt/thp
+ls -l 
+```
 ✅ This ensures TheHive has proper access to its files.  
 ![](images/image_31.png)  
-**Open the configuration file:**   sudo nano /etc/thehive/application.conf  
+**Open the configuration file:**   `sudo nano /etc/thehive/application.conf ` 
 
 ⚠️ If application.conf is missing, TheHive likely didn’t install correctly. Reinstall it before proceeding.
 
 **Edit the following keys** (use **`CTRL+W`** in nano to search each one):
 
-| hostname \= \["{thehive-vm-ip}"\]cluster-name \= soc-workflowbackend \= elasticsearch    hostname \= \["{thehive-vm-ip}"\]application.baseUrl \= "http://{thehive-vm-ip}:9000" |
-| :---- |
+``` 
+ hostname = ["{thehive-vm-ip}]"
+
+cluster-name = soc-workflow
+
+backend = elasticsearch
+    hostname = ["{thehive-vm-ip}"]
+
+application.baseUrl = "http://{thehive-vm-ip}:9000" 
+```
 
 ![](images/image_32.png)
 
@@ -390,15 +417,21 @@ Save and exit: **CTRL+X → Y → Enter**
 
 **Restart and enable TheHive**
 
-| sudo systemctl start thehive.servicesudo systemctl enable thehive.servicesudo systemctl status thehive.service |
-| :---- |
+``` 
+sudo systemctl start thehive.service
+sudo systemctl enable thehive.service
+sudo systemctl status thehive.service  
+ ```
 
 ✅ If the status shows **active (running)**, TheHive is ready.![](images/image_33.png)
 
 Verify all required services are running
 
-| sudo systemctl status cassandra.servicesudo systemctl status elasticsearch.servicesudo systemctl status thehive.service |
-| :---- |
+``` 
+sudo systemctl status cassandra.service
+sudo systemctl status elasticsearch.service
+sudo systemctl status thehive.service  
+ ``` 
 
 All three must show **active (running)** before you proceed.  
 ![](images/image_34.png)
@@ -408,7 +441,7 @@ Once all services are running, open your browser and go to:
 You should now see **TheHive login page** 🎉  
 ![](images/image_35.png)  
 If the page doesn’t load, your firewall might be blocking port 9000\.  
-Allow it using:  sudo ufw allow 9000 
+Allow it using: ` sudo ufw allow 9000 `
 
 To find the **latest default credentials** or learn how to perform the initial admin setup, refer to the official StrangeBee documentation:  
 👉 [Perform Initial Setup as Admin — TheHive Docs](https://docs.strangebee.com/thehive/administration/perform-initial-setup-as-admin/)  
@@ -448,10 +481,13 @@ If the agent does not appear active:
 
 **On your Wazuh VM**, allow the following ports:
 
-| sudo ufw allow 1514sudo ufw allow 1515 |
-| :---- |
+```
+sudo ufw allow 1514
+sudo ufw allow 1515  
+```
+ 
 
-**On your Windows VM**, restart the Wazuh service:  Restart-Service \-Name "wazuh"   
+**On your Windows VM**, restart the Wazuh service:  `Restart-Service -Name "wazuh"   `
 Refresh the dashboard again. The agent should now appear as active.
 
 ### **Configure Sysmon Telemetry in Wazuh**
@@ -460,29 +496,29 @@ To enhance visibility, integrate **Sysmon** logs with your Windows Wazuh agent.
 
 **Backup Configuration**
 
-Make a backup of your current Wazuh agent config file: **C:\\Program Files (x86)\\ossec-agent\\ossec.conf**
+Make a backup of your current Wazuh agent config file: **C:\Program Files (x86)\ossec-agent\ossec.conf**
 
 Copy it to another location (for example, your Desktop).
 
 #### **Edit Configuration**
 
 1. Open **Notepad as Administrator**.  
-2. Press **`Ctrl + O`** and navigate to: **C:\\Program Files (x86)\\ossec-agent**  
+2. Press **`Ctrl + O`** and navigate to: **C:\Program Files (x86)\ossec-agent**  
 3. Open **`ossec.conf`**.![](images/image_40.png)  
 4. Locate and remove the highlighted default log entries.![](images/image_41.png)
 
 #### **Add Sysmon Logs**
 
 1. Open **Event Viewer** → **`Applications and Services Logs` → `Microsoft` → `Windows` → `Sysmon` → `Operational`**.  
-2. Right-click **Operational** → **Properties** → copy the **Full Name**.  
+2. Right-click **`Operational`** → **`Properties`** → copy the **`Full Name`**.  
 3. Paste this log path inside your **`ossec.conf`** file under the **`<localfile>`** section.![](images/image_42.png)  
 4. Save the file and restart the Wazuh service![](images/image_43.png)
 
 **Disable Windows Defender (for Lab Purposes Only)**
 
-1. Open **Windows Security** → **Virus & threat protection**.  
-2. Scroll down to **Exclusions** → **Add or remove exclusions**.  
-3. Click **Add an exclusion → Folder** → select **C:\\**
+1. Open **`Windows Security`** → **`Virus & threat protection`**.  
+2. Scroll down to **`Exclusions`** → **`Add or remove exclusions`**.  
+3. Click **`Add an exclusion` → `Folder`** → select **C:\\**
 
 ![](images/image_44.png)  
 ![](images/image_45.png)  
@@ -501,21 +537,23 @@ Now Mimikatz is ready for use in your test environment.
 
 ## **Configure Wazuh to Detect Mimikatz Activity**
 
-In your **Wazuh VM**, open and verify the logging configuration:  nano /var/ossec/etc/ossec.conf 
+In your **Wazuh VM**, open and verify the logging configuration:  `nano /var/ossec/etc/ossec.conf `
 
 Ensure these lines are set to:
 
-| \<logall\>yes\</logall\>\<logall\_json\>yes\</logall\_json\> |
-| :---- |
+```
+  <logall>yes</logall>
+  <logall_json>yes</logall_json>  
+```
 
 ![](images/image_49.png)
 
-Save the file and restart Wazuh:  systemctl restart wazuh-manager.service 
+Save the file and restart Wazuh:   `systemctl restart wazuh-manager.service` 
 
 Check **`/var/ossec/logs/archives/`**  logs should now be generated there.  
 ![](images/image_50.png)
 
-Adjust Filebeat Configuration:   nano /etc/filebeat/filebeat.yml 
+Adjust Filebeat Configuration:   `nano /etc/filebeat/filebeat.yml `
 
 ![](images/image_51.png)  
 save (**`Ctrl + X → Y → Enter`**), and restart:  systemctl restart filebeat.service 
@@ -534,8 +572,25 @@ Now return to your **Wazuh dashboard** and create a **new index**.
 
 Add the following custom rule to your ruleset:
 
-| \<group name="local,syslog,sshd,"\>  \<rule id="100001" level="5"\>    \<if\_sid\>5716\</if\_sid\>    \<srcip\>1.1.1.1\</srcip\>    \<description\>sshd: authentication failed from IP 1.1.1.1.\</description\>    \<group\>authentication\_failed, pci\_dss\_10.2.4, pci\_dss\_10.2.5\</group\>  \</rule\>  \<rule id="100002" level="15"\>    \<if\_group\>sysmon\_event1\</if\_group\>    \<field name="win.eventdata.originalFileName" type="pcre2"\>(?i)mimikatz\\.exe\</field\>    \<description\>Suspicious Mimikatz activity detected on system\</description\>    \<mitre\>      \<id\>T1003\</id\>    \</mitre\>  \</rule\>\</group\> |
-| :---- |
+  <group name="local,syslog,sshd,">
+  <rule id="100001" level="5">
+    <if_sid>5716</if_sid>
+    <srcip>1.1.1.1</srcip>
+    <description>sshd: authentication failed from IP 1.1.1.1.</description>
+    <group>authentication_failed, pci_dss_10.2.4, pci_dss_10.2.5</group>
+  </rule>
+
+  <rule id="100002" level="15">
+    <if_group>sysmon_event1</if_group>
+    <field name="win.eventdata.originalFileName" type="pcre2">(?i)mimikatz\.exe</field>
+    <description>Suspicious Mimikatz activity detected on system</description>
+    <mitre>
+      <id>T1003</id>
+    </mitre>
+  </rule>
+
+</group>  
+ 
 
 ![](images/image_59.png)  
 ![](images/image_60.png)
@@ -567,15 +622,21 @@ Go to [https://shuffler.io](https://shuffler.io) → **Sign up / Log in** → In
 
 * Copy its **Webhook URI**.
 
-Now, go back to your **Wazuh VM** and open the config file:  sudo nano /var/ossec/etc/ossec.conf 
+Now, go back to your **Wazuh VM** and open the config file:  `sudo nano /var/ossec/etc/ossec.conf `
 
 Add this under the **`</global>`** tag:
 
-| \<integration\>  \<name\>shuffle\</name\>  \<hook\_url\>{your-webhook-URI}\</hook\_url\>  \<rule\_id\>100002\</rule\_id\>  \<alert\_format\>json\</alert\_format\>\</integration\> |
-| :---- |
+```
+  <integration>
+  <name>shuffle</name>
+  <hook_url>{your-webhook-URI}</hook_url>
+  <rule_id>100002</rule_id>
+  <alert_format>json</alert_format>
+</integration>  
+``` 
 
 ![](images/image_63.png)  
-Save and restart the service:   sudo systemctl restart wazuh-manager.service 
+Save and restart the service:  ` sudo systemctl restart wazuh-manager.service `
 
 In Shuffle, click **Start Webhook** to begin listening.  
 ![](images/image_64.png)
@@ -596,7 +657,7 @@ Then go to **Explore Runs** in Shuffle → you should see data received successf
 * Drag **Shuffle Tools** → rename it → under **Find Actions**, choose **`Regex Capture Group`**.
 
 * Use this Regex:  
-  **SHA256=(\[0-9A-Fa-f\]{64})**![](images/image_69.png)  
+ **`SHA256=([0-9A-Fa-f[{64})`**![](images/image_69.png)  
 * For **Input data**, click the ⨁ icon → select **Runtime Argument → hashes**.![](images/image_70.png)
 
 #### **Add VirusTotal Integration**
@@ -639,8 +700,23 @@ Now in Shuffle:
 
 Paste this body:
 
-| 	{  "description": "$exec.title",  "externallink": "${externallink}",  "flag": false,  "pap": 2,  "severity": "3",  "source": "$exec.pretext",  "sourceRef": "$exec.rule\_id",  "status": "New",  "summary": "Mimikatz usage detected on host: $exec.text.win.system.computer",  "tags": \["T1003"\],  "title": "$exec.title",  "tlp": "2",  "type": "Internal"} |
-| :---- |
+```
+{
+  "description": "$exec.title",
+  "externallink": "${externallink}",
+  "flag": false,
+  "pap": 2,
+  "severity": "3",
+  "source": "$exec.pretext",
+  "sourceRef": "$exec.rule_id",
+  "status": "New",
+  "summary": "Mimikatz usage detected on host: $exec.text.win.system.computer",
+  "tags": ["T1003"],
+  "title": "$exec.title",
+  "tlp": "2",
+  "type": "Internal"
+}  
+```
 
 ![](images/image_83.png)
 
@@ -655,10 +731,14 @@ Save and run the workflow → verify on TheHive that a **new alert** appears.
 * Configure the recipient email address.  
 * Paste this into the Body field:
 
-| Mimikatz execution identified  Time: $exec.all\_fields.full\_log.win.eventdata.utcTime  Title: $exec.title  Host: $exec.text.win.system.computer   |
-| :---- |
+```
+Mimikatz execution identified  
+Time: $exec.all_fields.full_log.win.eventdata.utcTime  
+Title: $exec.title  
+Host: $exec.text.win.system.computer    
+```
 
-You can also include other dynamic elements by clicking the ⨁ icon → **Runtime Argument** → and selecting the desired field (for example, *rule\_id*, *hashes*, or *description*).  
+You can also include other dynamic elements by clicking the `⨁` icon → **Runtime Argument** → and selecting the desired field (for example, *rule_id*, *hashes*, or *description*).  
 ![](images/image_86.png)
 
 Save and run the workflow again  you should now receive an email alert.
