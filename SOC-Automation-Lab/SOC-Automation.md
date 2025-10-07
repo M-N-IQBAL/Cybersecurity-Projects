@@ -254,8 +254,10 @@ Check the status of the Wazuh manager service: systemctl status wazuh-manager.se
 * If it’s **running** → you’re good to go.  
 * If not, restart the service and check again:
 
-`systemctl restart wazuh-manager.service
-systemctl status wazuh-manager.service `
+```
+systemctl restart wazuh-manager.service
+systemctl status wazuh-manager.service 
+```
 
 ![](images/image_14.png)
 
@@ -387,7 +389,8 @@ Save and exit: **CTRL+X → Y → Enter**
 
 Before configuring TheHive, update file permissions for its directory:
 
-```cd /opt/thp
+```
+cd /opt/thp
 ls -l
 sudo chown -R thehive:thehive /opt/thp
 ls -l 
