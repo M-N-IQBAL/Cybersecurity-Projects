@@ -23,7 +23,7 @@ Below is a high-level flow of how these components interact:
 You can explore the full setup documentation here:
 
 - **[View Markdown Version](https://github.com/M-N-IQBAL/Cybersecurity-Projects/blob/main/SOC-Automation-Lab/SOC-Automation.md)**  
-- **[Download PDF Version](https://github.com/M-N-IQBAL/Cybersecurity-Projects/blob/main/SOC-Automation-Lab/SOC-Automation.pdf)**
+- **[Download PDF Version](https://github.com/M-N-IQBAL/Cybersecurity-Projects/blob/main/SOC-Automation-Lab/SOC-Automation-Lab.pdf)**
 
 Both versions explain each step, from Wazuh setup to Mimikatz detection automation.
 
