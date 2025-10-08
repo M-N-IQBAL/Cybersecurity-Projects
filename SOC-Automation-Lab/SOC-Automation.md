@@ -152,7 +152,7 @@ Sysmon (System Monitor) is a Windows system service and device driver from the S
 3. Run the installation command:   `.\Sysmon64.exe -i sysmonconfig.xml` ![](images/image_4.png)
 4. Accept the license agreement.  
 5. After installation, you should see the message:   **`Sysmon64 started.`**  
-6. Run the following command to confirm Sysmon is running:	Get-Service -Name sysmon64  
+6. Run the following command to confirm Sysmon is running:	`Get-Service -Name sysmon64`  
 7. If the **Status** shows **`Running`**, Sysmon has been successfully installed.   
 8. To verify logs are being generated, open Event Viewer → **Applications and Services Logs → Microsoft → Windows → Sysmon → Operational.**
 
@@ -215,10 +215,11 @@ Repeat the same steps as above, but this time:
 * **`Wazuh` →** for SIEM setup  
 * **`TheHive`** → for incident response and case management
 
-  Droplet   Purpose   Recommended Specs   Hostname  
-  :---:   :---:   :---:   :---:  
-  Wazuh   SIEM & log analysis   8 GB RAM / 4 vCPUs   Wazuh  
-  The-Hive   Incident response   16 GB RAM / 4 vCPUs   The-Hive  
+  
+| Droplet     | Purpose             | Recommended Specs       | Hostname  |
+|--------------|--------------------|--------------------------|------------|
+| Wazuh       | SIEM & log analysis | 8 GB RAM / 4 vCPUs      | Wazuh     |
+| The-Hive    | Incident response   | 16 GB RAM / 4 vCPUs     | The-Hive  |
 
 ## **Connect to the Wazuh VM**
 
@@ -249,7 +250,7 @@ If everything is successful, you will see:
 
 ### **Verify Wazuh Service**
 
-Check the status of the Wazuh manager service: systemctl status wazuh-manager.service
+Check the status of the Wazuh manager service: `systemctl status wazuh-manager.service`
 
 * If it’s **running** → you’re good to go.  
 * If not, restart the service and check again:
@@ -282,7 +283,7 @@ Go to the official StrangeBee portal and register for an account: 👉 [Register
 
 ### **Connect to TheHive VM**
 
-* Open PowerShell on your local machine and connect via SSH (replace with your TheHive VM IP): ssh root@{your-thehive-vm-ip}  
+* Open PowerShell on your local machine and connect via SSH (replace with your TheHive VM IP): `ssh root@{your-thehive-vm-ip}`  
 * Type **`yes`** when prompted, then enter your VM password.  
 * Update your system packages: `sudo apt update && apt upgrade -y`
 
@@ -377,11 +378,11 @@ Save and exit: **CTRL+X → Y → Enter**
 
 **Restart and enable Elasticsearch:**
 
-`sudo systemctl start elasticsearch.service`
-
-`sudo systemctl enable elasticsearch.service`
-
-`sudo systemctl status elasticsearch.service `
+```
+sudo systemctl start elasticsearch.service
+sudo systemctl enable elasticsearch.service
+sudo systemctl status elasticsearch.service
+```
 
 ✅ If the status shows **active (running)**, Elasticsearch is ready.![](images/image_30.png)
 
@@ -559,7 +560,7 @@ Check **`/var/ossec/logs/archives/`**  logs should now be generated there.
 Adjust Filebeat Configuration:   `nano /etc/filebeat/filebeat.yml `
 
 ![](images/image_51.png)  
-save (**`Ctrl + X → Y → Enter`**), and restart:  systemctl restart filebeat.service 
+save (**`Ctrl + X → Y → Enter`**), and restart:  `systemctl restart filebeat.service` 
 
 Now return to your **Wazuh dashboard** and create a **new index**.  
 ![](images/image_52.png)  
@@ -575,6 +576,7 @@ Now return to your **Wazuh dashboard** and create a **new index**.
 
 Add the following custom rule to your ruleset:
 
+```
   <group name="local,syslog,sshd,">
   <rule id="100001" level="5">
     <if_sid>5716</if_sid>
@@ -593,7 +595,7 @@ Add the following custom rule to your ruleset:
   </rule>
 
 </group>  
- 
+``` 
 
 ![](images/image_59.png)  
 ![](images/image_60.png)
